@@ -202,7 +202,8 @@ $$("[data-look]").forEach((card) => {
     lookTrigger = card;
     $("#look-title").textContent = currentLook;
     $("#look-description").textContent = card.dataset.description;
-    $("#look-dialog-image").src = `/images/${card.dataset.image}-640.webp`;
+    $("#look-dialog-image").src =
+      `${import.meta.env.BASE_URL}images/${card.dataset.image}-640.webp`;
     $("#look-dialog-image").alt = $("img", card).alt;
     lookDialog.showModal();
     updateScrollLock();
