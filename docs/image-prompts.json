@@ -1,0 +1,17 @@
+{
+  "mode": "built-in image_gen",
+  "assets": [
+    {
+      "filename": "hero-chestnut-editorial.png",
+      "prompt": "Use case: photorealistic-natural.\nAsset type: hero photograph for a premium Russian hair salon website, mood reference.\nCreate one vertical 4:5 premium beauty editorial photograph of an adult woman in an ivory fine-knit sleeveless top, cropped hips up. Her long flowing chestnut brown hair has soft waves and rich nuanced brown tones. She is angled away toward the right with a graceful side profile, looking down; hair is visually dominant over the face. Warm greige studio background. Soft late-afternoon window light, quiet cinematic film grain, realistic individual hair strands, luxury salon campaign styling. Photorealistic skin and natural fabric texture. No text, watermark, logo, props, collage, or border."
+    },
+    {
+      "filename": "honey-blonde-bob-editorial.png",
+      "prompt": "Use case: photorealistic-natural.\nAsset type: hair styling editorial photograph for a premium Russian hair salon website, mood reference.\nCreate one vertical 4:5 beauty editorial photograph, rear three-quarter profile of an adult woman with a polished chin-length honey blonde bob tucked behind one ear. She wears a natural dark taupe or chocolate top. Minimal warm taupe studio background, gentle late-afternoon window light, warm film aesthetic, quiet cinematic grain and realistic individual hair strands. Luxury salon campaign, refined natural skin texture. Hair is the principal focus. No text, watermark, logos, props, collage, or border."
+    },
+    {
+      "filename": "mens-textured-hair-editorial.png",
+      "prompt": "Use case: photorealistic-natural.\nAsset type: men's haircut editorial portrait for a premium Russian hair salon website, mood reference.\nCreate one vertical 4:5 portrait of an adult man in his 30s with an elegant textured dark haircut and light stubble. Off-white shirt, sculptural side profile. Warm grey studio background, soft late-afternoon window light, nuanced dark hair tones, premium luxury salon editorial photography with a warm film aesthetic and quiet cinematic grain. Realistic individual hair strands and natural skin texture. No text, watermark, logos, props, collage, or border."
+    }
+  ]
+}
