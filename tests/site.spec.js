@@ -87,7 +87,7 @@ test("clipboard copying is explicit and preserves the edited message", async ({
   );
 });
 
-for (const width of [320, 390, 768, 1440]) {
+for (const width of [320, 360, 390, 480, 760, 768, 820, 950, 1024, 1440, 1920, 2560]) {
   test(`layout and local assets work at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     const failures = [];
@@ -119,7 +119,7 @@ for (const width of [320, 390, 768, 1440]) {
     expect(failures).toEqual([]);
     await page.locator("summary").first().click();
     await expect(page.locator("details").first()).toHaveAttribute("open", "");
-    if (width < 760) {
+    if (width <= 760) {
       await page.locator(".mobile-book-bar").scrollIntoViewIfNeeded();
       await expect(page.locator(".mobile-book-bar")).toHaveClass(/is-visible/);
       await page.evaluate(() => window.scrollTo(0, 0));
@@ -131,6 +131,46 @@ for (const width of [320, 390, 768, 1440]) {
         .click();
       await expect(page.locator("#mobile-menu")).not.toBeVisible();
     }
+  });
+}
+
+for (const viewport of [
+  { width: 320, height: 568 },
+  { width: 390, height: 844 },
+  { width: 667, height: 375 },
+  { width: 844, height: 390 },
+]) {
+  test(`services and scrollable dialogs fit ${viewport.width}×${viewport.height}`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+    await page.evaluate(() => document.fonts.ready);
+    for (const tab of await page.getByRole("tab").all()) {
+      await tab.click();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      for (const row of await page.locator(".service-row").all()) {
+        expect(await row.evaluate((element) => [...element.children].every((child) => {
+          const outer = element.getBoundingClientRect();
+          const inner = child.getBoundingClientRect();
+          return inner.left >= outer.left && inner.right <= outer.right + 1;
+        }))).toBe(true);
+      }
+    }
+    await page.locator(".service-book").first().click();
+    const booking = page.locator("#booking-dialog");
+    expect(await booking.evaluate((dialog) => dialog.scrollWidth <= dialog.clientWidth)).toBe(true);
+    await page.locator(".dialog-phone a").scrollIntoViewIfNeeded();
+    const close = booking.locator(".dialog-close");
+    const rect = await close.boundingBox();
+    expect(rect.y).toBeGreaterThanOrEqual(0);
+    expect(rect.y + rect.height).toBeLessThanOrEqual(viewport.height);
+    await close.click();
+    await expect(booking).not.toBeVisible();
+    await page.locator(".look-card").first().click();
+    const look = page.locator("#look-dialog");
+    expect(await look.evaluate((dialog) => dialog.scrollWidth <= dialog.clientWidth)).toBe(true);
+    await page.locator("#book-look").click();
+    await expect(booking).toBeVisible();
+    await page.keyboard.press("Escape");
   });
 }
 
@@ -150,6 +190,20 @@ test("iPhone SMS uses the Apple body separator", async ({ browser }) => {
     /^sms:\+79102664823&body=/,
   );
   await context.close();
+});
+
+test("mobile menu stays usable in landscape and closes when switching to desktop", async ({ page }) => {
+  await page.setViewportSize({ width: 667, height: 320 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Открыть меню" }).click();
+  const menu = page.locator("#mobile-menu");
+  expect(await menu.evaluate((element) => element.getBoundingClientRect().bottom <= innerHeight)).toBe(true);
+  await menu.locator(".mobile-menu-phone").scrollIntoViewIfNeeded();
+  await expect(menu.locator(".mobile-menu-phone")).toBeInViewport();
+  await page.setViewportSize({ width: 1024, height: 768 });
+  await expect(menu).toBeHidden();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.getByRole("button", { name: "Открыть меню" })).toHaveAttribute("aria-expanded", "false");
 });
 
 test("main page and booking dialog meet automated WCAG AA checks", async ({

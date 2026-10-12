@@ -106,10 +106,19 @@ h3 {
   width: 100%;
   max-width: 1536px;
   margin-inline: auto;
-  padding-inline: var(--page-gutter);
+  padding-left: max(var(--page-gutter), env(safe-area-inset-left));
+  padding-right: max(var(--page-gutter), env(safe-area-inset-right));
 }
 .section-pad {
   padding-block: 108px;
+}
+.hero > *,
+.section-heading > *,
+.services-layout > *,
+.philosophy-layout > *,
+.faq-layout > *,
+.contacts-layout > * {
+  min-width: 0;
 }
 .eyebrow {
   font-size: 12px;
@@ -136,6 +145,7 @@ h2 em {
   align-items: center;
   justify-content: center;
   gap: 24px;
+  max-width: 100%;
   min-height: 56px;
   padding: 16px 28px;
   background: var(--accent);
@@ -317,6 +327,9 @@ h2 em {
   background: var(--paper);
   border-bottom: 1px solid var(--line);
   box-shadow: 0 15px 30px #352b2810;
+  max-height: calc(100dvh - var(--header-height, 88px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .mobile-menu > a {
   display: block;
@@ -341,7 +354,7 @@ h2 em {
 .hero-copy {
   position: relative;
   padding: 76px 30px 75px
-    max(var(--page-gutter), calc((100vw - 1536px) / 2 + var(--page-gutter)));
+    max(var(--page-gutter), env(safe-area-inset-left), calc((min(100vw, 1920px) - 1536px) / 2 + var(--page-gutter)));
 }
 .hero-eyebrow {
   display: flex;
@@ -419,6 +432,7 @@ h2 em {
 .image-caption {
   position: absolute;
   left: 36px;
+  right: 36px;
   bottom: 38px;
   color: #fffaf2;
   display: flex;
@@ -439,7 +453,7 @@ h2 em {
 .hero-image-index {
   position: absolute;
   right: 35px;
-  bottom: 40px;
+  top: 38px;
   font-size: 12px;
   letter-spacing: 0.1em;
   color: #fffaf2;
@@ -580,7 +594,7 @@ h2 em {
 }
 .service-row {
   display: grid;
-  grid-template-columns: 1fr auto 45px;
+  grid-template-columns: minmax(0, 1fr) auto 45px;
   align-items: center;
   gap: 24px;
   min-height: 102px;
@@ -595,6 +609,7 @@ h2 em {
   font-size: 29px;
   line-height: 1.2;
   letter-spacing: -0.015em;
+  overflow-wrap: anywhere;
 }
 .service-detail {
   font-size: 14px;
@@ -1088,6 +1103,9 @@ dialog {
   max-height: calc(100dvh - 40px);
   box-shadow: 0 20px 90px #20181226;
   overscroll-behavior: contain;
+  max-width: calc(100% - 32px);
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 dialog::backdrop {
   background: #241e1ad1;
@@ -1097,10 +1115,11 @@ dialog[open] {
   animation: dialog-arrive 220ms ease-out;
 }
 .dialog-close {
-  position: absolute;
+  position: sticky;
+  float: right;
   z-index: 2;
-  right: 16px;
   top: 16px;
+  margin: 16px 16px -56px 0;
   width: 40px;
   height: 40px;
   background: var(--paper);
@@ -1225,7 +1244,7 @@ dialog[open] {
 }
 .look-dialog-layout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .look-dialog-layout > img {
   height: 100%;
@@ -1333,7 +1352,7 @@ dialog[open] {
 
 @media (min-width: 1600px) {
   .hero-scroll {
-    left: calc((100vw - 1536px) / 2 + var(--page-gutter));
+    left: calc((min(100vw, 1920px) - 1536px) / 2 + var(--page-gutter));
   }
   .hero {
     min-height: 770px;
@@ -1352,6 +1371,11 @@ dialog[open] {
   }
   .hero-location {
     margin-top: 65px;
+  }
+}
+@media (min-width: 761px) {
+  html {
+    scrollbar-gutter: stable;
   }
 }
 @media (max-width: 1150px) {
@@ -1466,7 +1490,7 @@ dialog[open] {
     padding-top: 68px;
   }
   .hero h1 {
-    font-size: 78px;
+    font-size: clamp(58px, 8.2vw, 78px);
   }
   .hero-eyebrow {
     font-size: 12px;
@@ -1502,16 +1526,16 @@ dialog[open] {
   }
   .service-row {
     gap: 16px;
-    grid-template-columns: 1fr auto 35px;
+    grid-template-columns: minmax(0, 1fr) auto 44px;
   }
   .service-book {
-    height: 35px;
-    width: 35px;
+    height: 44px;
+    width: 44px;
   }
   .service-book::before,
   .service-book::after {
-    left: 10px;
-    top: 16px;
+    left: 15px;
+    top: 21px;
   }
   .service-name {
     font-size: 25px;
@@ -1580,9 +1604,11 @@ dialog[open] {
 @media (max-width: 760px) {
   :root {
     --page-gutter: 24px;
+    --header-height: 79px;
   }
   html {
     scroll-padding-top: 24px;
+    scroll-padding-bottom: calc(88px + env(safe-area-inset-bottom));
   }
   .header-inner {
     height: 79px;
@@ -1599,16 +1625,16 @@ dialog[open] {
     width: 29px;
   }
   .header-book {
-    min-height: 38px;
+    min-height: 44px;
     font-size: 12px;
     padding: 8px 14px;
   }
   .menu-toggle {
-    width: 36px;
-    margin-right: -7px;
+    width: 44px;
+    flex-shrink: 0;
   }
   .menu-toggle span {
-    left: 7px;
+    left: 10px;
   }
   .hero {
     display: flex;
@@ -1627,7 +1653,7 @@ dialog[open] {
     width: 24px;
   }
   .hero h1 {
-    font-size: clamp(76px, 15vw, 108px);
+    font-size: clamp(60px, 16vw, 108px);
     line-height: 0.91;
     letter-spacing: -0.04em;
   }
@@ -1648,30 +1674,27 @@ dialog[open] {
     margin-top: 13px;
   }
   .hero-location {
-    position: absolute;
-    right: 24px;
-    bottom: 43px;
-    writing-mode: vertical-rl;
+    position: static;
     gap: 7px;
     font-size: 12px;
-    margin: 0;
+    margin-top: 20px;
     letter-spacing: 0.02em;
   }
   .hero-location svg {
-    transform: rotate(-90deg);
     width: 14px;
     height: 14px;
   }
   .hero-visual {
     min-height: 0;
     height: clamp(350px, 110vw, 590px);
-    margin-left: 24px;
+    margin-left: var(--page-gutter);
   }
   .hero-image {
     object-position: center 33%;
   }
   .image-caption {
     left: 24px;
+    right: 24px;
     bottom: 26px;
   }
   .image-caption > span:first-child {
@@ -1682,7 +1705,7 @@ dialog[open] {
   }
   .hero-image-index {
     right: 25px;
-    bottom: 28px;
+    top: 26px;
     font-size: 12px;
   }
   .hero-scroll {
@@ -1711,7 +1734,7 @@ dialog[open] {
     padding-block: 65px;
   }
   h2 {
-    font-size: 52px;
+    font-size: clamp(40px, 10vw, 52px);
     line-height: 1.02;
   }
   .section-heading {
@@ -1736,7 +1759,8 @@ dialog[open] {
   }
   .service-tabs {
     flex-direction: row;
-    gap: 21px;
+    gap: 8px 21px;
+    flex-wrap: wrap;
     border-bottom: 1px solid var(--line);
   }
   .service-tabs button {
@@ -1768,7 +1792,7 @@ dialog[open] {
     padding: 19px 0;
     min-height: 98px;
     gap: 14px;
-    grid-template-columns: 1fr auto 35px;
+    grid-template-columns: minmax(0, 1fr) auto 44px;
   }
   .service-name {
     font-size: 26px;
@@ -1806,7 +1830,7 @@ dialog[open] {
     padding-left: 0;
   }
   .philosophy-content h2 {
-    font-size: 56px;
+    font-size: clamp(40px, 10.5vw, 56px);
   }
   .philosophy-intro {
     font-size: 16px;
@@ -1927,7 +1951,7 @@ dialog[open] {
     margin-bottom: 26px;
   }
   .contacts-copy h2 {
-    font-size: 76px;
+    font-size: clamp(56px, 14vw, 76px);
   }
   .contacts-copy > p:not(.eyebrow) {
     font-size: 16px;
@@ -1965,7 +1989,7 @@ dialog[open] {
   }
   .footer {
     padding-top: 34px;
-    padding-bottom: 78px;
+    padding-bottom: calc(88px + env(safe-area-inset-bottom));
   }
   .footer-top {
     flex-wrap: wrap;
@@ -2010,13 +2034,15 @@ dialog[open] {
     gap: 13px;
     background: #f5f2ecf5;
     border-top: 1px solid var(--line);
-    padding: 10px 20px max(10px, env(safe-area-inset-bottom));
+    padding: 10px max(20px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
     backdrop-filter: blur(12px);
     transform: translateY(110%);
+    visibility: hidden;
     transition: transform 300ms ease;
   }
   .mobile-book-bar.is-visible {
     transform: translateY(0);
+    visibility: visible;
   }
   .mobile-book-bar > a {
     display: grid;
@@ -2037,10 +2063,10 @@ dialog[open] {
     font-size: 12px;
   }
   .dialog-content {
-    padding: 40px 25px 25px;
+    padding: 64px 25px 25px;
   }
   .dialog-content > h2 {
-    font-size: 42px;
+    font-size: clamp(32px, 8vw, 42px);
   }
   .dialog-content > .eyebrow {
     font-size: 12px;
@@ -2095,8 +2121,42 @@ dialog[open] {
     margin-top: 21px;
   }
   .toast {
-    bottom: 89px;
+    bottom: calc(89px + env(safe-area-inset-bottom));
     font-size: 12px;
+  }
+}
+@media (max-width: 480px) {
+  .header-book {
+    display: none;
+  }
+  .menu-toggle {
+    margin-left: auto;
+  }
+  .service-row {
+    grid-template-columns: minmax(0, 1fr) 44px;
+    gap: 12px;
+  }
+  .service-row > div:first-child {
+    grid-column: 1 / -1;
+  }
+  .service-detail {
+    max-width: none;
+  }
+  .service-price {
+    text-align: left;
+    font-size: 16px;
+  }
+  .service-price small {
+    display: inline;
+    margin-left: 12px;
+    white-space: normal;
+  }
+  .hero-cta,
+  .contacts-copy .button {
+    width: 100%;
+  }
+  .hero-cta {
+    min-width: 0;
   }
 }
 @media (max-width: 380px) {
@@ -2115,15 +2175,11 @@ dialog[open] {
   .brand-caption {
     font-size: 6px;
   }
-  .header-book {
-    padding: 8px 10px;
-    font-size: 12px;
-  }
   .header-inner {
     gap: 9px;
   }
   .hero h1 {
-    font-size: 73px;
+    font-size: clamp(56px, 18vw, 68px);
   }
   .hero-eyebrow {
     font-size: 12px;
@@ -2156,7 +2212,7 @@ dialog[open] {
     font-size: 12px;
   }
   .philosophy-content h2 {
-    font-size: 49px;
+    font-size: clamp(40px, 12vw, 49px);
   }
   .look-caption h3 {
     font-size: 26px;
@@ -2171,7 +2227,7 @@ dialog[open] {
     padding-inline: 20px;
   }
   .dialog-content > h2 {
-    font-size: 38px;
+    font-size: clamp(32px, 9vw, 38px);
   }
   .booking-actions {
     grid-template-columns: 1fr;
