@@ -50,6 +50,29 @@ test("price categories support keyboard selection and carry the service into SMS
   expect(errors).toEqual([]);
 });
 
+test("MAX opens the salon chat and copies the edited booking message", async ({ page, context }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.goto("/");
+  await page.getByRole("button", { name: "Записаться: Женская стрижка", exact: true }).click();
+  const link = page.getByRole("link", { name: "Написать в MAX", exact: true });
+  await expect(link).toHaveAttribute("href", "https://max.ru/join/G7kVLsz0px-cw4D8Y_7Tu2lD1eRlZBAnFH8VEblXkhI");
+  // Prevent external navigation while exercising the real copying handler.
+  await link.evaluate((element) => element.addEventListener("click", (event) => event.preventDefault()));
+  await link.click();
+  await expect(page.getByRole("status")).toContainText("Вставьте его в чат MAX");
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toContain("женская стрижка");
+
+  const edited = "Здравствуйте! Стрижка & укладка?\nВ пятницу в 15:00 + уход 💇";
+  await page.locator("#booking-message").fill(edited);
+  await link.click();
+  await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toBe(edited);
+  await page.locator("#booking-message").fill("   ");
+  await link.click();
+  await expect(page.getByRole("status")).toHaveText("Сначала напишите сообщение.");
+  await expect(page.locator("#booking-message")).toBeFocused();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(edited);
+});
+
 test("an inspiration image opens a detail view and an actionable booking draft", async ({
   page,
 }) => {
@@ -79,7 +102,7 @@ test("clipboard copying is explicit and preserves the edited message", async ({
     .locator("#booking-message")
     .fill("Хочу записаться на стрижку в субботу.");
   await page
-    .getByRole("button", { name: "Скопировать текст для ВКонтакте" })
+    .getByRole("button", { name: "Скопировать текст для VK или MAX" })
     .click();
   await expect(page.getByRole("status")).toContainText("Сообщение скопировано");
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(

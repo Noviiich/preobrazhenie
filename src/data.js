@@ -6,6 +6,7 @@ export const salon = {
   address: "село Плещеево, Луговая улица, 4Б",
   vkPage: "https://vk.ru/club242078993",
   vkMessages: "https://vk.me/club242078993",
+  maxMessages: "https://max.ru/u/f9LHodD0cOJguaPi-o30SOBbFZKIRngXs4i7B2z9io7AYtnJjKc1JReePPQ",
   map:
     "https://yandex.ru/maps/?text=" +
     encodeURIComponent("село Плещеево, Луговая улица 4Б"),

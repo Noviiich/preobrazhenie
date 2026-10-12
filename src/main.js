@@ -18,6 +18,7 @@ let toastTimer;
 $("#year").textContent = new Date().getFullYear();
 $("#map-link").href = salon.map;
 $("#vk-message-link").href = salon.vkMessages;
+$$("[data-max-link]").forEach((link) => { link.href = salon.maxMessages; });
 
 function renderServices(categoryId) {
   const category = categories.find(({ id }) => id === categoryId);
@@ -83,13 +84,14 @@ categories.forEach((category) => {
   serviceSelect.append(group);
 });
 
-function updateSmsLink() {
+function updateMessageLinks() {
+  const text = messageInput.value.trim();
   const isAppleMobile =
     /iPad|iPhone|iPod/.test(navigator.userAgent) ||
     (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   const separator = isAppleMobile ? "&" : "?";
   $("#sms-link").href =
-    `sms:${salon.phone}${separator}body=${encodeURIComponent(messageInput.value.trim())}`;
+    `sms:${salon.phone}${separator}body=${encodeURIComponent(text)}`;
 }
 
 function updateMessage() {
@@ -97,7 +99,7 @@ function updateMessage() {
   messageInput.value = service
     ? `Здравствуйте! Хочу записаться в «${salon.name}». Интересует: ${service.toLocaleLowerCase("ru-RU")}. Подскажите, пожалуйста, ближайшее свободное время.`
     : `Здравствуйте! Хочу записаться в «${salon.name}» и посоветоваться по выбору услуги. Подскажите, пожалуйста, удобное время.`;
-  updateSmsLink();
+  updateMessageLinks();
 }
 
 function updateScrollLock() {
@@ -126,7 +128,17 @@ function openBooking(service = "") {
 }
 
 serviceSelect.addEventListener("change", updateMessage);
-messageInput.addEventListener("input", updateSmsLink);
+messageInput.addEventListener("input", updateMessageLinks);
+$("#max-message-link").addEventListener("click", (event) => {
+  if (!messageInput.value.trim()) {
+    event.preventDefault();
+    showToast("Сначала напишите сообщение.");
+    messageInput.focus();
+    return;
+  }
+  // Keep the link's native navigation synchronous so popup blockers do not interfere.
+  void copyMessage("MAX");
+});
 $("#booking-form").addEventListener("submit", (event) =>
   event.preventDefault(),
 );
@@ -178,7 +190,7 @@ function showToast(message) {
   toastTimer = setTimeout(() => toast.classList.remove("visible"), 3500);
 }
 
-$("#copy-message").addEventListener("click", async () => {
+async function copyMessage(destination = "VK или MAX") {
   const text = messageInput.value.trim();
   if (!text) {
     showToast("Сначала напишите сообщение.");
@@ -187,14 +199,15 @@ $("#copy-message").addEventListener("click", async () => {
   }
   try {
     await navigator.clipboard.writeText(text);
-    showToast("Сообщение скопировано. Вставьте его в чат VK.");
+    showToast(`Сообщение скопировано. Вставьте его в чат ${destination}.`);
   } catch {
     // Select the real editable field if clipboard access is unavailable.
     messageInput.focus();
     messageInput.select();
     showToast("Текст выделен. Скопируйте его через меню устройства.");
   }
-});
+}
+$("#copy-message").addEventListener("click", () => { void copyMessage(); });
 
 $$("[data-look]").forEach((card) => {
   card.addEventListener("click", () => {

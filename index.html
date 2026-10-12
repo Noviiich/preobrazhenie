@@ -466,8 +466,8 @@
               </summary>
               <div class="faq-answer">
                 <p>
-                  Нажмите «Записаться», выберите услугу и напишите нам через SMS
-                  или ВКонтакте. Можно просто позвонить по номеру
+                  Нажмите «Записаться», выберите услугу и напишите нам через
+                  SMS, MAX или ВКонтакте. Можно просто позвонить по номеру
                   <a href="tel:+79102664823">+7 (910) 266-48-23</a>. Вместе
                   подберём удобное время и подтвердим запись.
                 </p>
@@ -527,7 +527,7 @@
               </summary>
               <div class="faq-answer">
                 <p>
-                  Напишите в SMS, ВКонтакте или позвоните. Пожалуйста,
+                  Напишите в SMS, MAX, ВКонтакте или позвоните. Пожалуйста,
                   предупредите заранее, как только планы изменятся: так мы
                   сможем предложить это время другому гостю.
                 </p>
@@ -583,6 +583,10 @@
                   rel="noopener noreferrer"
                   >ВКонтакте</a
                 >
+                <span aria-hidden="true">/</span>
+                <a class="text-link" data-max-link
+                  href="https://max.ru/join/G7kVLsz0px-cw4D8Y_7Tu2lD1eRlZBAnFH8VEblXkhI"
+                  target="_blank" rel="noopener noreferrer">MAX</a>
               </div>
             </div>
             <div class="contact-schedule">
@@ -709,16 +713,31 @@
                 /></svg
             ></a>
           </div>
+          <a
+            class="button button-outline"
+            id="max-message-link"
+            data-max-link
+            href="https://max.ru/join/G7kVLsz0px-cw4D8Y_7Tu2lD1eRlZBAnFH8VEblXkhI"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-describedby="max-message-hint"
+            >Написать в MAX</a
+          >
           <button
             type="button"
             class="copy-message text-link"
             id="copy-message"
           >
-            Скопировать текст для ВКонтакте
+            Скопировать текст для VK или MAX
           </button>
           <p class="booking-hint">
             SMS откроется в приложении сообщений на телефоне. Для ВКонтакте
             скопируйте текст и вставьте его в чат.
+          </p>
+          <p class="booking-hint" id="max-message-hint">
+            Кнопка MAX копирует текст и открывает чат салона.
+            Вставьте сообщение в чат и отправьте. Если текст не скопировался,
+            используйте кнопку копирования выше.
           </p>
         </form>
         <div class="dialog-phone">

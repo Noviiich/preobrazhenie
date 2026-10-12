@@ -1005,6 +1005,7 @@ h2 em {
 }
 .contact-social {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 20px;
   margin-top: 13px;
@@ -1216,6 +1217,11 @@ dialog[open] {
 .copy-message {
   font-size: 12px;
   margin-top: 16px;
+}
+#max-message-link {
+  display: flex;
+  width: 100%;
+  margin-top: 12px;
 }
 .booking-hint {
   font-size: 12px;
